@@ -323,12 +323,27 @@ export const config = {
 
 ## 📊 Data Flow
 
-### Client → Server → Database
+### NextAuth.js Authentication Flow
+```
+[Client] 
+    ↓ Sign In Request
+[NextAuth.js Handler] 
+    ↓ OAuth Provider
+[Google/GitHub] 
+    ↓ User Data
+[Supabase Adapter] 
+    ↓ Store in next_auth schema
+[Supabase Database]
+    ↓ Session Token
+[Client]
+```
+
+### Custom API Operations Flow
 ```
 [Client Component] 
-    ↓ HTTP Request
+    ↓ HTTP Request + Session
 [Next.js API Route] 
-    ↓ Validate Auth + Input
+    ↓ Validate Session
 [Database Service] 
     ↓ Supabase Admin Client
 [Supabase Database]
@@ -336,17 +351,15 @@ export const config = {
 [Client Component]
 ```
 
-### Admin Operations Flow
+### Dashboard Data Flow
 ```
-[Admin Dashboard] 
-    ↓ Admin Action
-[Admin API Route] 
-    ↓ Validate Admin Role
-[Database Service] 
-    ↓ Execute Operation
+[Dashboard Page] 
+    ↓ TanStack Query
+[Stats API Route] 
+    ↓ Database Service
 [Supabase Database]
-    ↓ Response
-[Admin Dashboard]
+    ↓ Stats Data
+[Dashboard Components]
 ```
 
 ## 🔐 Security Measures
@@ -363,76 +376,84 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
 
 ### 2. API Route Security
-- JWT token validation on all protected routes
-- Role-based access control for admin endpoints
+- NextAuth.js session validation on protected routes
 - Input validation with Zod schemas
-- Rate limiting (implement with upstash/ratelimit)
+- Rate limiting (implement with upstash/ratelimit if needed)
 - SQL injection prevention through parameterized queries
+- No custom role management needed - leverage OAuth provider data
 
 ### 3. Database Security
 - Server-only database access through Service Role Key
-- All security handled at API route level (no RLS for simplicity)
+- NextAuth.js handles all user authentication securely
+- All custom data security handled at API route level
 - Database connection pooling
-- Type-safe database operations
+- Type-safe database operations for custom tables
 
 ## 🚀 Implementation Phases
 
-### Phase 4A: Database Foundation (Current)
-- [ ] Install Supabase client dependencies
-- [ ] Create `lib/db.ts` with type-safe admin client
-- [ ] Set up database schema and migrations
-- [ ] Generate TypeScript types with Supabase CLI
-- [ ] Create type-safe database service class
+### ✅ Phase 4A: Database Foundation (Completed)
+- [x] Install Supabase client dependencies
+- [x] Create `lib/db.ts` with type-safe admin client
+- [x] Set up NextAuth.js with Supabase adapter
+- [x] Generate minimal TypeScript types
+- [x] Create simplified database service class
 
-### Phase 4B: API Layer
-- [ ] Create admin API routes structure
-- [ ] Implement user CRUD operations
-- [ ] Add posts CRUD operations
-- [ ] Add input validation with Zod
-- [ ] Add rate limiting
+### Phase 4B: API Layer (Optional - Add as needed)
+- [ ] Create custom API routes for application features
+- [ ] Add input validation with Zod for custom endpoints
+- [ ] Implement rate limiting if needed
+- [ ] Add custom business logic APIs
 
-### Phase 4C: Admin Interface
-- [ ] Create admin layout and navigation
-- [ ] Build admin dashboard overview
-- [ ] Implement users management interface
-- [ ] Implement posts management interface
-- [ ] Add generic data table component
+### Phase 4C: Extended Features (Optional)
+- [ ] Add profiles table for extended user data
+- [ ] Implement role-based access (if needed)
+- [ ] Create admin interface for user management
+- [ ] Add application-specific CRUD operations
 
-### Phase 4D: User Interface
-- [ ] Create user posts API and pages
-- [ ] Add public posts display
-- [ ] Create user dashboard
+### Phase 4D: Advanced Features (Optional)
+- [ ] Add real-time subscriptions
+- [ ] Implement file upload functionality
+- [ ] Add search and filtering capabilities
+- [ ] Create analytics and reporting
 
 ## 📝 Development Guidelines
 
 ### 1. Database Operations
-- Always use the DatabaseService class with full type safety
+- Use NextAuth.js for all user-related operations
+- Use DatabaseService class for custom tables with full type safety
 - Never expose Service Role Key to client
-- Validate all inputs with Zod
-- Use Supabase's generated TypeScript types
+- Validate all inputs with Zod for custom APIs
+- Leverage Supabase's generated TypeScript types for custom tables
 
-### 2. API Design
-- Follow RESTful conventions
+### 2. Authentication
+- Use NextAuth.js sessions for authentication state
+- Access user data via `useSession()` hook
+- Protect routes with NextAuth.js middleware
+- Leverage OAuth provider data (no custom user management needed)
+
+### 3. API Design
+- Follow RESTful conventions for custom APIs
 - Use consistent error handling
 - Implement proper HTTP status codes
-- Add request/response logging
+- Add request/response logging for debugging
 
-### 3. Admin Interface
-- Implement responsive design
-- Add loading states and error handling
-- Use TanStack Table for data display
-- Provide bulk operations where appropriate
+### 4. Custom Features
+- Add tables to `public` schema for application data
+- Create corresponding API routes for CRUD operations
+- Build TanStack Query hooks for data fetching
+- Use Zod schemas for validation
 
-### 4. Testing Strategy
+### 5. Testing Strategy
 - Unit tests for database service methods
-- Integration tests for API routes
-- E2E tests for admin workflows
-- Mock Supabase in test environment
+- Integration tests for custom API routes
+- E2E tests for authentication flows
+- Mock NextAuth.js and Supabase in test environment
 
-### 5. Type Safety
+### 6. Type Safety
 - Generate types with: `npx supabase gen types typescript --project-id YOUR_PROJECT_ID > src/lib/database.types.ts`
-- Update types after schema changes
-- Use generated types throughout the application
+- Update types after adding custom tables
+- Use generated types throughout custom features
+- NextAuth.js types are handled automatically
 
 ## 🔗 External Dependencies
 
@@ -440,9 +461,17 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```json
 {
   "@supabase/supabase-js": "^2.x.x",
+  "next-auth": "^5.x.x",
+  "@auth/supabase-adapter": "^1.x.x",
   "@tanstack/react-query": "^5.x.x",
+  "zod": "^3.x.x"
+}
+```
+
+### Optional Packages (Add as needed)
+```json
+{
   "@tanstack/react-table": "^8.x.x",
-  "zod": "^3.x.x",
   "@upstash/ratelimit": "^1.x.x",
   "@upstash/redis": "^1.x.x"
 }
@@ -460,12 +489,19 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
 ## 📚 Next Steps
 
-1. **Review and approve this architecture plan**
-2. **Set up Supabase project and obtain credentials**
-3. **Begin Phase 4A implementation**
-4. **Create database schema and migrations**
-5. **Implement basic database service layer**
+1. **✅ Architecture is complete and operational**
+2. **Begin Phase 6: PWA Setup** with service workers and offline capabilities
+3. **Add custom features as needed**:
+   - Create custom tables in `public` schema
+   - Build corresponding API routes
+   - Add business logic and validation
+4. **Enhance with advanced features**:
+   - Real-time subscriptions
+   - File upload capabilities
+   - Search and analytics
 
 ---
 
 *Last Updated: August 23, 2025*
+
+**Note**: This architecture now reflects the completed implementation with NextAuth.js-first user management and a clean, extensible foundation for custom features.
