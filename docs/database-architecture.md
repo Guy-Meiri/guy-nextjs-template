@@ -2,74 +2,113 @@
 
 ## 🎯 Overview
 
-This document outlines the database integration strategy for the Next.js Golden Template, focusing on security-first architecture with server-side only database access and comprehensive admin capabilities.
+This document outlines the database integration strategy for the Next.js Golden Template, focusing on NextAuth.js-first architecture with server-side database access and extensible foundation for custom features.
 
 ## 🏗️ Architecture Principles
 
-### 1. Server-Side Only Database Access
+### 1. NextAuth.js-First User Management
+- **NextAuth.js handles all user authentication and session management**
+- User data stored in `next_auth` schema (automatically created by Supabase adapter)
+- No custom user tables needed - NextAuth.js provides complete user management
+- OAuth-based authentication (Google, GitHub) as primary sign-in method
+
+### 2. Server-Side Only Database Access
 - **No direct client-to-database connections**
 - All database operations happen through Next.js API routes
 - Client communicates only with Next.js backend via HTTP/REST APIs
 - Supabase client used exclusively on the server-side
 
-### 2. Admin Interface Requirements
-- Full CRUD operations on all database entities
-- Role-based access control (Admin, User roles)
-- Data visualization and management dashboard
-- Audit logging for all admin actions
+### 3. Extensible Foundation
+- Minimal initial schema focused on authentication
+- Easy to extend with custom tables in `public` schema
+- Type-safe database operations for custom features
+- Modular architecture for adding business logic
 
-### 3. Security First
+### 4. Security First
 - Service Role Key used only on server-side
-- Row Level Security (RLS) policies in Supabase
+- All security handled at API route level
 - Input validation with Zod schemas
-- Rate limiting on API endpoints
+- Protected routes via NextAuth.js middleware
 
 ## 🗄️ Database Schema Design
 
-### Core Tables
+### NextAuth.js Schema (Automatic)
+
+The Supabase adapter for NextAuth.js automatically creates these tables in the `next_auth` schema:
 
 ```sql
--- Users table (extends NextAuth users)
-CREATE TABLE users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email VARCHAR(255) UNIQUE NOT NULL,
-  name VARCHAR(255),
+-- Automatically created by NextAuth.js Supabase adapter
+-- Located in next_auth schema
+
+next_auth.users (
+  id UUID PRIMARY KEY,
+  name TEXT,
+  email TEXT UNIQUE,
+  email_verified TIMESTAMPTZ,
   image TEXT,
-  role VARCHAR(50) DEFAULT 'user',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+)
+
+next_auth.accounts (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES next_auth.users(id),
+  type TEXT NOT NULL,
+  provider TEXT NOT NULL,
+  provider_account_id TEXT NOT NULL,
+  -- OAuth provider specific fields
+)
+
+next_auth.sessions (
+  id UUID PRIMARY KEY,
+  session_token TEXT UNIQUE NOT NULL,
+  user_id UUID REFERENCES next_auth.users(id),
+  expires TIMESTAMPTZ NOT NULL
+)
+
+next_auth.verification_tokens (
+  token TEXT PRIMARY KEY,
+  identifier TEXT NOT NULL,
+  expires TIMESTAMPTZ NOT NULL
+)
+```
+
+### Custom Schema (Optional)
+
+For application-specific data, you can add tables to the `public` schema:
+
+```sql
+-- Example: User profiles table for extended user data
+CREATE TABLE public.profiles (
+  id UUID REFERENCES next_auth.users(id) PRIMARY KEY,
+  display_name TEXT,
+  bio TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Example: Posts table for demo CRUD operations
-CREATE TABLE posts (
+-- Example: Application-specific data
+CREATE TABLE public.posts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  title VARCHAR(255) NOT NULL,
+  title TEXT NOT NULL,
   content TEXT,
-  author_id UUID REFERENCES users(id),
+  author_id UUID REFERENCES next_auth.users(id),
   published BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
 
 ### Type-Safe Database Setup
 
-For a type-safe Supabase client, we'll use Supabase's built-in TypeScript generation:
-
-```sql
--- Database setup (no RLS for now - simplified approach)
--- Tables are created without Row Level Security policies
--- All security will be handled at the API route level
-```
+Currently using minimal database types since NextAuth.js handles user management:
 
 ## 🛠️ Implementation Architecture
 
 ### 1. Database Layer (`lib/db.ts`)
 
 ```typescript
-// First, generate TypeScript types from your Supabase schema
-// Run: npx supabase gen types typescript --project-id YOUR_PROJECT_ID > srclib/database.types.ts
-
 import { createClient } from '@supabase/supabase-js'
 import { Database } from './database.types'
 
@@ -87,116 +126,54 @@ export const supabaseAdmin = createClient<Database>(
 
 // Type-safe database operations interface
 export class DatabaseService {
-  // User operations with full type safety
-  async getUsers() {
-    const { data, error } = await supabaseAdmin
-      .from('users')
-      .select('*')
+  // Note: With NextAuth.js + Supabase adapter, user data is managed automatically
+  // in the next_auth schema. For most applications, you'll access users via NextAuth.js sessions
+  
+  // Statistics for admin dashboard
+  async getStats() {
+    // Since we're using NextAuth.js for user management, we don't have direct access
+    // to user tables in our Database type. Return placeholder stats.
+    // In a real application, you might create a database function or view for this.
     
-    if (error) throw error
-    return data
+    return {
+      totalUsers: 0, // Placeholder - would need RPC function or view to access next_auth.users
+    }
   }
   
-  async createUser(userData: Database['public']['Tables']['users']['Insert']) {
-    const { data, error } = await supabaseAdmin
-      .from('users')
-      .insert(userData)
-      .select()
-      .single()
-    
-    if (error) throw error
-    return data
-  }
-  
-  async updateUser(id: string, userData: Database['public']['Tables']['users']['Update']) {
-    const { data, error } = await supabaseAdmin
-      .from('users')
-      .update(userData)
-      .eq('id', id)
-      .select()
-      .single()
-    
-    if (error) throw error
-    return data
-  }
-  
-  async deleteUser(id: string) {
-    const { error } = await supabaseAdmin
-      .from('users')
-      .delete()
-      .eq('id', id)
-    
-    if (error) throw error
-  }
-  
-  // Posts operations with full type safety
-  async getPosts() {
-    const { data, error } = await supabaseAdmin
-      .from('posts')
-      .select(`
-        *,
-        author:users(id, name, email)
-      `)
-    
-    if (error) throw error
-    return data
-  }
-  
-  async createPost(postData: Database['public']['Tables']['posts']['Insert']) {
-    const { data, error } = await supabaseAdmin
-      .from('posts')
-      .insert(postData)
-      .select(`
-        *,
-        author:users(id, name, email)
-      `)
-      .single()
-    
-    if (error) throw error
-    return data
-  }
-  
-  async updatePost(id: string, postData: Database['public']['Tables']['posts']['Update']) {
-    const { data, error } = await supabaseAdmin
-      .from('posts')
-      .update(postData)
-      .eq('id', id)
-      .select(`
-        *,
-        author:users(id, name, email)
-      `)
-      .single()
-    
-    if (error) throw error
-    return data
-  }
-  
-  async deletePost(id: string) {
-    const { error } = await supabaseAdmin
-      .from('posts')
-      .delete()
-      .eq('id', id)
-    
-    if (error) throw error
-  }
+  // Example: If you add a profiles table for extended user data
+  // async getUserProfile(userId: string) {
+  //   const { data, error } = await supabaseAdmin
+  //     .from('profiles')
+  //     .select('*')
+  //     .eq('user_id', userId)
+  //     .single()
+  //   
+  //   if (error) throw error
+  //   return data
+  // }
 }
 
 // Export singleton instance
 export const db = new DatabaseService()
 
-// Type exports for use in API routes and components
-export type User = Database['public']['Tables']['users']['Row']
-export type NewUser = Database['public']['Tables']['users']['Insert']
-export type UpdateUser = Database['public']['Tables']['users']['Update']
+// NextAuth.js user types (these come from next_auth schema)
+export type NextAuthUser = {
+  id: string
+  name: string | null
+  email: string | null
+  emailVerified: string | null
+  image: string | null
+}
 
-export type Post = Database['public']['Tables']['posts']['Row']
-export type NewPost = Database['public']['Tables']['posts']['Insert']
-export type UpdatePost = Database['public']['Tables']['posts']['Update']
+// Enhanced types
+export type DatabaseStats = {
+  totalUsers: number
+}
 ```
 
 ### 2. Type Generation Setup (`lib/database.types.ts`)
 
-The Supabase CLI will generate this file automatically based on your database schema:
+Currently minimal since NextAuth.js manages user data. Generated by Supabase CLI:
 
 ```typescript
 // This file is auto-generated by Supabase CLI
@@ -213,73 +190,45 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      users: {
-        Row: {
-          id: string
-          email: string
-          name: string | null
-          image: string | null
-          role: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          email: string
-          name?: string | null
-          image?: string | null
-          role?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          email?: string
-          name?: string | null
-          image?: string | null
-          role?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      posts: {
-        Row: {
-          id: string
-          title: string
-          content: string | null
-          author_id: string | null
-          published: boolean | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          title: string
-          content?: string | null
-          author_id?: string | null
-          published?: boolean | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          title?: string
-          content?: string | null
-          author_id?: string | null
-          published?: boolean | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "posts_author_id_fkey"
-            columns: ["author_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
+      // Add your custom tables here as you create them
+      // Example:
+      // profiles: {
+      //   Row: {
+      //     id: string
+      //     user_id: string
+      //     display_name: string | null
+      //     bio: string | null
+      //     avatar_url: string | null
+      //     created_at: string
+      //     updated_at: string
+      //   }
+      //   Insert: {
+      //     id?: string
+      //     user_id: string
+      //     display_name?: string | null
+      //     bio?: string | null
+      //     avatar_url?: string | null
+      //     created_at?: string
+      //     updated_at?: string
+      //   }
+      //   Update: {
+      //     id?: string
+      //     user_id?: string
+      //     display_name?: string | null
+      //     bio?: string | null
+      //     avatar_url?: string | null
+      //     created_at?: string
+      //     updated_at?: string
+      //   }
+      //   Relationships: [
+      //     {
+      //       foreignKeyName: "profiles_user_id_fkey"
+      //       columns: ["user_id"]
+      //       referencedRelation: "users"
+      //       referencedColumns: ["id"]
+      //     }
+      //   ]
+      // }
     }
     Views: {
       [_ in never]: never
@@ -295,76 +244,80 @@ export interface Database {
     }
   }
 }
+```
 
 ### 2. API Routes Structure
 ```
 app/api/
-├── admin/                 # Admin-only endpoints
-│   ├── users/
-│   │   ├── route.ts      # GET /api/admin/users (list all users)
-│   │   └── [id]/
-│   │       └── route.ts  # GET/PUT/DELETE /api/admin/users/[id]
-│   └── posts/
-│       ├── route.ts      # GET /api/admin/posts (list all posts)
-│       └── [id]/
-│           └── route.ts  # GET/PUT/DELETE /api/admin/posts/[id]
-├── users/                # User endpoints
-│   └── posts/
-│       ├── route.ts      # GET/POST /api/users/posts (user's own posts)
-│       └── [id]/
-│           └── route.ts  # GET/PUT/DELETE /api/users/posts/[id] (own posts only)
-└── public/               # Public endpoints
-    └── posts/
-        ├── route.ts      # GET /api/public/posts (published posts only)
+├── auth/
+│   └── [...nextauth]/    # NextAuth.js authentication endpoint
+│       └── route.ts
+├── stats/                # Dashboard statistics
+│   └── route.ts         # GET /api/stats (dashboard data)
+└── [custom]/            # Add your custom API routes here
+    ├── profiles/
+    │   ├── route.ts     # GET/POST /api/profiles
+    │   └── [id]/
+    │       └── route.ts # GET/PUT/DELETE /api/profiles/[id]
+    └── posts/           # Example custom resource
+        ├── route.ts     # GET/POST /api/posts
         └── [id]/
-            └── route.ts  # GET /api/public/posts/[id] (published post)
+            └── route.ts # GET/PUT/DELETE /api/posts/[id]
 ```
 
-### 3. Admin Dashboard Pages
+### 3. Dashboard Pages Structure
 ```
-app/admin/
-├── layout.tsx           # Admin layout with navigation
-├── page.tsx            # Admin dashboard overview
-├── users/
-│   ├── page.tsx        # Users management
-│   └── [id]/
-│       └── page.tsx    # User details/edit
-├── posts/
-│   ├── page.tsx        # Posts management
-│   └── [id]/
-│       └── page.tsx    # Post details/edit
-└── components/
-    ├── data-table.tsx  # Reusable admin data table
-    ├── crud-form.tsx   # Generic CRUD form
-    └── stats-cards.tsx # Dashboard statistics
+app/
+├── dashboard/           # Protected user dashboard
+│   └── page.tsx        # Dashboard overview with stats
+├── auth/               # Authentication pages
+│   ├── signin/
+│   │   └── page.tsx   # Sign in page
+│   └── error/
+│       └── page.tsx   # Auth error page
+└── [custom]/          # Add your custom pages here
+    ├── profile/
+    │   └── page.tsx   # User profile management
+    └── admin/         # Admin interface (if roles are implemented)
+        └── page.tsx   # Admin dashboard
 ```
 
 ### 4. Middleware & Authorization
 ```typescript
-// middleware.ts - Enhanced with admin route protection
-export async function middleware(request: NextRequest) {
-  const token = await getToken({ req: request })
-  
-  // Admin routes protection
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!token || token.role !== 'admin') {
-      return NextResponse.redirect(new URL('/auth/signin', request.url))
-    }
+// middleware.ts - Enhanced with protected route handling
+import { withAuth } from "next-auth/middleware"
+
+export default withAuth(
+  function middleware(req) {
+    // Additional middleware logic can go here
+  },
+  {
+    callbacks: {
+      authorized: ({ token, req }) => {
+        // Protect dashboard routes
+        if (req.nextUrl.pathname.startsWith('/dashboard')) {
+          return !!token
+        }
+        
+        // Protect API routes that require authentication
+        if (req.nextUrl.pathname.startsWith('/api/') && 
+            !req.nextUrl.pathname.startsWith('/api/auth/')) {
+          return !!token
+        }
+        
+        // Example: Admin route protection (if you implement roles)
+        // if (req.nextUrl.pathname.startsWith('/admin')) {
+        //   return token?.role === 'admin'
+        // }
+        
+        return true
+      },
+    },
   }
-  
-  // API routes protection
-  if (request.nextUrl.pathname.startsWith('/api/admin')) {
-    if (!token || token.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-  }
-  
-  // User API routes protection
-  if (request.nextUrl.pathname.startsWith('/api/users')) {
-    if (!token) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
-    }
-  }
+)
+
+export const config = {
+  matcher: ['/dashboard/:path*', '/api/:path*']
 }
 ```
 

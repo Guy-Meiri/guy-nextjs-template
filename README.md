@@ -123,7 +123,7 @@ Follow these guides to get your Client IDs and Client Secrets for the environmen
 
 ```bash
 # Database
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
@@ -163,7 +163,7 @@ Copy the output and set it as your `NEXTAUTH_SECRET` in production.
 
 ### ✅ Safe for Client (NEXT_PUBLIC_*)
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
 
