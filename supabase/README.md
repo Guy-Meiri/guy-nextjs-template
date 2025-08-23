@@ -42,9 +42,13 @@ Once your project is created:
 
 ### 3. Set Up Database Schema
 
+NextAuth.js with Supabase adapter will automatically create the required authentication tables when you first sign in. No manual schema setup is required for basic authentication.
+
+If you want to add custom tables for your application:
+
 1. Go to **SQL Editor** in your Supabase dashboard
-2. Copy the contents of `supabase/schema.sql`
-3. Paste and run the SQL to create tables and sample data
+2. Create your custom tables (see Database Schema section for examples)
+3. Set up Row Level Security (RLS) policies if needed
 
 ### 4. Update Environment Variables
 
@@ -82,22 +86,32 @@ npx supabase gen types typescript --project-id YOUR_PROJECT_ID > src/lib/databas
 
 ### Tables
 
-#### `users`
-- Extends NextAuth user data
-- Includes role-based access control
-- Supports admin/user roles
+The project uses **NextAuth.js with Supabase adapter** for user management, which automatically creates the necessary authentication tables in the `next_auth` schema:
 
-#### `posts`
-- Demo CRUD operations
-- Links to users as authors
-- Supports published/draft states
+- `next_auth.users` - User accounts
+- `next_auth.accounts` - OAuth account connections  
+- `next_auth.sessions` - User sessions
+- `next_auth.verification_tokens` - Email verification
+
+### Custom Tables
+
+Currently, the project uses a minimal schema focused on authentication. You can add custom tables in the `public` schema for your application-specific data:
+
+```sql
+-- Example: User profiles table (optional)
+CREATE TABLE public.profiles (
+  id UUID REFERENCES next_auth.users(id) PRIMARY KEY,
+  display_name TEXT,
+  bio TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
 
 ### Sample Data
 
-The schema includes:
-- Default admin user (`admin@example.com`)
-- Sample published post
-- Sample draft post
+The NextAuth.js adapter will automatically manage user data. No manual user creation is needed - users are created when they sign in via OAuth providers.
 
 ## 🔐 Security Notes
 
@@ -126,10 +140,19 @@ The schema includes:
 ## 📊 Admin Features
 
 Once set up, you'll have access to:
-- User management (CRUD operations)
-- Post management (CRUD operations)
-- Dashboard statistics
-- Role-based access control
+- Authentication via OAuth providers (Google, GitHub)
+- Protected routes and middleware
+- Session management
+- Dashboard with basic statistics
+- Extensible architecture for custom features
+
+### Adding Custom Features
+
+To extend the application:
+1. **Create custom tables** in the `public` schema
+2. **Add API routes** in `src/app/api/`
+3. **Create React hooks** for data fetching in `src/hooks/`
+4. **Add validation schemas** in `src/lib/validations.ts`
 
 ## 🔍 Troubleshooting
 
@@ -154,21 +177,21 @@ Once set up, you'll have access to:
 
 ### Type Errors
 - Re-generate types after schema changes
-- Check table names match in `database.types.ts`
-- Verify column types are correct
+- The default `database.types.ts` is minimal since NextAuth.js manages user tables
+- Add custom table types as you create new tables
 
 ### Permission Errors
-- Ensure you're using Service Role Key for admin operations
-- Check user roles in database
-- Verify middleware is protecting admin routes
+- Ensure you're using Service Role Key for server-side operations
+- Check OAuth provider configuration
+- Verify middleware is protecting routes correctly
 
 ## 📚 Next Steps
 
 After database setup:
 1. Start development server: `npm run dev`
-2. Test database connection in API routes
-3. Set up admin user account
-4. Explore admin dashboard (coming in Phase 4B)
+2. Test authentication by signing in with OAuth providers
+3. Explore the dashboard to see session information
+4. Add custom tables and features as needed
 
 ---
 

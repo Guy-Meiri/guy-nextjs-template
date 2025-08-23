@@ -75,7 +75,7 @@ import { Database } from './database.types'
 
 // Type-safe server-side Supabase client with Service Role Key
 export const supabaseAdmin = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!, // Server-side only!
   {
     auth: {
@@ -405,7 +405,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 SUPABASE_DATABASE_PASSWORD=your_db_password
 
 # Client-safe (public)
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
 

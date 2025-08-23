@@ -76,7 +76,7 @@ Run the SQL schema to create the required tables for NextAuth.js and your applic
 
 The schema includes:
 - NextAuth.js tables (`next_auth` schema)
-- Application tables (`public` schema)
+- Application users table (`public` schema)
 - Proper permissions and indexes
 
 ## Step 5: Configure Schema Exposure
