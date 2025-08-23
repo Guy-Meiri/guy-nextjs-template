@@ -9,7 +9,7 @@ function isPlaceholder(value: string): boolean {
 
 export const env = {
   // Database
-  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  SUPABASE_URL: process.env.SUPABASE_URL || '',
   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
   
@@ -33,7 +33,7 @@ export const env = {
  * Check if required services are configured
  */
 export function hasSupabaseConfig(): boolean {
-  return !isPlaceholder(env.NEXT_PUBLIC_SUPABASE_URL) && 
+  return !isPlaceholder(env.SUPABASE_URL) && 
          !isPlaceholder(env.NEXT_PUBLIC_SUPABASE_ANON_KEY) &&
          !isPlaceholder(env.SUPABASE_SERVICE_ROLE_KEY)
 }
