@@ -104,11 +104,20 @@ After creating a new project from this template:
 - [ ] Update `package.json` with your project details
 - [ ] Configure environment variables in `.env.local`
 - [ ] Set up Supabase project and update connection details
-- [ ] Configure NextAuth providers and secrets
+- [ ] Configure NextAuth providers and secrets (see OAuth setup guides below)
 - [ ] Update site metadata in `app/layout.tsx`
 - [ ] Customize the landing page and branding
 - [ ] Set up Vercel deployment
 - [ ] Configure domain and SSL
+
+## 🔐 OAuth Provider Setup
+
+Detailed step-by-step guides for configuring authentication providers:
+
+- **[Google OAuth Setup](./googleAuthInstruciton.md)** - Complete guide for Google Cloud Console setup
+- **[GitHub OAuth Setup](./githubAuthInstructions.md)** - Complete guide for GitHub OAuth App setup
+
+Follow these guides to get your Client IDs and Client Secrets for the environment variables below.
 
 ## 🔧 Environment Variables
 

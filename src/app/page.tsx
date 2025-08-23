@@ -3,15 +3,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { auth } from "@/lib/auth";
+import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">Next.js Golden Template</h1>
-          <ThemeToggle />
+          <div className="flex items-center gap-4">
+            {session?.user ? (
+              <Link href="/dashboard">
+                <Button variant="outline">Dashboard</Button>
+              </Link>
+            ) : (
+              <Link href="/auth/signin">
+                <Button variant="outline">Sign In</Button>
+              </Link>
+            )}
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -47,14 +61,14 @@ export default function Home() {
 
             <Card>
               <CardHeader>
-                <CardTitle>⚡ TypeScript</CardTitle>
+                <CardTitle>🔐 Authentication</CardTitle>
                 <CardDescription>
-                  Type-safe development experience
+                  NextAuth.js v5 with multiple providers
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Full TypeScript support with strict type checking and IntelliSense.
+                  Secure authentication with GitHub, Google, and more providers.
                 </p>
               </CardContent>
             </Card>
@@ -106,9 +120,15 @@ export default function Home() {
           </Card>
 
           {/* Status Info */}
-          <div className="text-center text-sm text-muted-foreground">
+          <div className="text-center text-sm text-muted-foreground space-y-1">
             <p>✅ Phase 1: Core Setup Complete</p>
-            <p>🎨 Phase 2: UI Foundation - In Progress</p>
+            <p>✅ Phase 2: UI Foundation Complete</p>
+            <p>🔐 Phase 3: Authentication - Complete</p>
+            {session?.user ? (
+              <p className="text-green-600">✅ You are signed in as {session.user.name || session.user.email}</p>
+            ) : (
+              <p className="text-blue-600">👆 Try signing in to test authentication</p>
+            )}
           </div>
         </div>
       </main>
