@@ -24,10 +24,10 @@ Once your project is created:
 3. In the **Project API keys** section, you'll see two keys:
 
 #### API Keys to Copy:
-- **Project URL** (at the top) → `NEXT_PUBLIC_SUPABASE_URL`
+- **Project URL** (at the top) → `SUPABASE_URL`
   - Example: `https://your-project-id.supabase.co`
 
-- **anon** `public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- **anon** `public` key → `SUPABASE_ANON_KEY`
   - This is the first key shown
   - Safe for client-side use
   - Starts with `eyJ...`
