@@ -59,7 +59,11 @@ export function validateEnv() {
   }
   
   if (env.IS_PRODUCTION && isPlaceholder(env.NEXTAUTH_SECRET)) {
-    warnings.push('NEXTAUTH_SECRET should be set to a secure value in production')
+    warnings.push('NEXTAUTH_SECRET must be set to a secure value in production (generate with: openssl rand -base64 32)')
+  }
+  
+  if (env.IS_PRODUCTION && env.NEXTAUTH_SECRET === 'dev_secret_for_local_development_only') {
+    warnings.push('NEXTAUTH_SECRET is using development value - change to a secure secret in production')
   }
   
   if (warnings.length > 0) {

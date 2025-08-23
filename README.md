@@ -138,6 +138,67 @@ GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
+## 🔒 Environment Variables Security
+
+**⚠️ CRITICAL SECURITY RULES:**
+
+### Generating NEXTAUTH_SECRET
+
+For production, you **MUST** generate a strong secret:
+
+```bash
+# Generate a secure secret (32 bytes, base64 encoded)
+openssl rand -base64 32
+
+# Or using Node.js
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+Copy the output and set it as your `NEXTAUTH_SECRET` in production.
+
+### Server vs Client Environment Variables
+
+- **`NEXT_PUBLIC_*`** variables are exposed to the browser (client-side)
+- **All other variables** are server-side only and never sent to the browser
+
+### ✅ Safe for Client (NEXT_PUBLIC_*)
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```
+
+### 🚫 NEVER expose these to client
+```bash
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key  # Server only!
+GITHUB_CLIENT_SECRET=your_secret                  # Server only!
+GOOGLE_CLIENT_SECRET=your_secret                  # Server only!
+NEXTAUTH_SECRET=your_secret                       # Server only!
+```
+
+### Best Practices
+
+1. **Never access server-side env vars in client components**
+   ```tsx
+   // ❌ WRONG - Don't do this in client components
+   const secret = process.env.GOOGLE_CLIENT_SECRET
+   
+   // ✅ CORRECT - Use NextAuth's getProviders() instead
+   const providers = await getProviders()
+   ```
+
+2. **Use proper patterns for checking configuration**
+   ```tsx
+   // ❌ WRONG - Exposes server logic to client
+   if (env.GOOGLE_CLIENT_SECRET) { ... }
+   
+   // ✅ CORRECT - Check server-side configuration
+   const providers = await getProviders()
+   if (providers.google) { ... }
+   ```
+
+3. **Environment validation happens server-side only**
+4. **Secrets should never appear in browser DevTools or client bundle**
+
 ## 📁 Project Structure
 
 ```
