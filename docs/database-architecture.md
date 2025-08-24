@@ -443,11 +443,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 - Build TanStack Query hooks for data fetching
 - Use Zod schemas for validation
 
-### 5. Testing Strategy
-- Unit tests for database service methods
-- Integration tests for custom API routes
-- E2E tests for authentication flows
-- Mock NextAuth.js and Supabase in test environment
+### 5. Testing Strategy (Future Implementation)
+- Unit tests for database service methods (planned)
+- Integration tests for custom API routes (planned)  
+- E2E tests for authentication flows (planned)
+- Mock NextAuth.js and Supabase in test environment (planned)
 
 ### 6. Type Safety
 - Generate types with: `npx supabase gen types typescript --project-id YOUR_PROJECT_ID > src/lib/database.types.ts`

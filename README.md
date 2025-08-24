@@ -4,7 +4,7 @@ A comprehensive, production-ready Next.js template for building full-stack progr
 
 ## 🎯 Purpose
 
-This template eliminates repetitive setup work by providing a pre-configured, battle-tested foundation for Next.js applications. Use it to bootstrap new projects instantly with best practices baked in.
+This template eliminates repetitive setup work by providing a pre-configured, production-ready foundation for Next.js applications. Use it to bootstrap new projects instantly with best practices baked in.
 
 ## 🛠️ Tech Stack
 
@@ -34,7 +34,6 @@ This template eliminates repetitive setup work by providing a pre-configured, ba
 
 ### Development & Deployment
 - **ESLint** - Code linting
-- **Prettier** - Code formatting
 - **Vercel** - Deployment platform
 - **PWA** - Progressive Web App capabilities
 
@@ -74,8 +73,6 @@ This template eliminates repetitive setup work by providing a pre-configured, ba
 
 ### ✅ Developer Experience
 - TypeScript throughout
-- Pre-commit hooks
-- Automated testing setup
 - Environment validation
 
 ## 🚀 Quick Start
@@ -263,9 +260,11 @@ npm run dev          # Start development server
 npm run build        # Build for production
 npm run start        # Start production server
 npm run lint         # Run ESLint
+npm run lint:fix     # Run ESLint with auto-fix
 npm run type-check   # Run TypeScript compiler
-npm run db:generate  # Generate database types
-npm run db:push      # Push database changes
+npm run clean        # Clean build artifacts
+npm run preview      # Build and preview production
+npm run verify-oauth # Verify OAuth configuration
 ```
 
 ## 🤝 Contributing
@@ -273,8 +272,7 @@ npm run db:push      # Push database changes
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+4. Submit a pull request
 
 ## 📄 License
 
