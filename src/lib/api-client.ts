@@ -69,7 +69,7 @@ export class ApiClient {
 
   // Stats endpoints
   stats = {
-        getDashboard: () => 
+    getDashboard: () => 
       this.request<ApiEndpoints['stats']['dashboard']['response']>(
         API_ENDPOINTS.stats.dashboard.path
       ),
