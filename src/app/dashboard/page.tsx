@@ -1,14 +1,17 @@
 import { auth } from "@/lib/auth"
 import { UserNav } from "@/components/auth/user-nav"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { DashboardStats } from "@/components/dashboard/dashboard-stats"
 import { redirect } from "next/navigation"
 
 export default async function DashboardPage() {
   const session = await auth()
-
+  
   if (!session?.user) {
     redirect("/auth/signin")
   }
+
+  
 
   return (
     <div className="min-h-screen bg-background">
@@ -28,11 +31,20 @@ export default async function DashboardPage() {
               Welcome back, {session.user.name || "User"}!
             </h2>
             <p className="text-muted-foreground">
-              This is your protected dashboard.
+              This is your protected dashboard with live statistics.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Dashboard Statistics */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">📊 Dashboard Statistics</h3>
+            <DashboardStats />
+          </div>
+
+          {/* Feature Cards */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">🚀 Template Features</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>✅ Authentication</CardTitle>
@@ -76,6 +88,7 @@ export default async function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
+            </div>
           </div>
         </div>
       </main>

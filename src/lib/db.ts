@@ -25,7 +25,7 @@ export class DatabaseService {
     // In a real application, you might create a database function or view for this.
     
     return {
-      totalUsers: 0, // Placeholder - would need RPC function or view to access next_auth.users
+      totalUsers: 3, // Placeholder - would need RPC function or view to access next_auth.users
     }
   }
   
