@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useDashboardStats } from "@/hooks/use-data"
+import { type DashboardStats } from "@/lib/api-client"
 import { Loader2, Users, Activity } from "lucide-react"
 
 export function DashboardStats() {

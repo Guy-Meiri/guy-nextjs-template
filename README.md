@@ -61,6 +61,7 @@ This template eliminates repetitive setup work by providing a pre-configured, ba
 
 ### ✅ Data Management
 - Type-safe API calls with TanStack Query
+- Fully typed API client with zero hardcoded paths
 - Optimistic updates
 - Caching strategies
 - Error handling
@@ -118,6 +119,38 @@ Detailed step-by-step guides for configuring authentication providers:
 - **[GitHub OAuth Setup](./githubAuthInstructions.md)** - Complete guide for GitHub OAuth App setup
 
 Follow these guides to get your Client IDs and Client Secrets for the environment variables below.
+
+## 🔗 Type-Safe API Client
+
+This template includes a fully type-safe API client that eliminates hardcoded API paths and provides excellent TypeScript intellisense.
+
+### Key Features
+
+- **🔒 Type Safety**: All API calls are fully typed with TypeScript
+- **🚫 No Hardcoded Paths**: API paths are defined once and reused
+- **💡 IntelliSense**: Full autocomplete for all endpoints and response types
+- **🔄 Refactor-Safe**: Changing an endpoint updates all usages automatically
+- **⚡ Runtime + Compile Time**: Works at both runtime and compile time
+
+### Quick Example
+
+```typescript
+// Define once in api-client.ts
+const API_ENDPOINTS = {
+  stats: {
+    dashboard: {
+      method: 'GET' as const,
+      path: '/api/stats' as const,
+      response: {} as { totalUsers: number }
+    }
+  }
+} as const
+
+// Use everywhere with full type safety
+const { data } = useDashboardStats() // data.totalUsers is properly typed!
+```
+
+📖 **[Complete API Client Guide](./docs/api-client-guide.md)** - Detailed documentation on how to add new APIs and use the type-safe client.
 
 ## 🔧 Environment Variables
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { apiClient } from '@/lib/api-client'
 
 // Query keys for caching
 export const queryKeys = {
@@ -13,15 +14,7 @@ export const queryKeys = {
 export function useDashboardStats() {
   return useQuery({
     queryKey: queryKeys.stats.dashboard,
-    queryFn: async () => {
-      const response = await fetch('/api/stats')
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch stats: ${response.statusText}`)
-      }
-      
-      return response.json()
-    },
+    queryFn: () => apiClient.stats.getDashboard(),
     staleTime: 2 * 60 * 1000, // 2 minutes
     refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
   })
