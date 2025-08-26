@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth"
-import { UserNav } from "@/components/auth/user-nav"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DashboardStats } from "@/components/dashboard/dashboard-stats"
+import { SiteHeader } from "@/components/layout/site-header"
 import { redirect } from "next/navigation"
 
 export default async function DashboardPage() {
@@ -16,12 +16,7 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <UserNav />
-        </div>
-      </header>
+      <SiteHeader title="Dashboard" showUserNav={true} />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">

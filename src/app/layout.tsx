@@ -45,9 +45,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             <QueryProvider>
-              <ErrorBoundary>
-                {children}
-              </ErrorBoundary>
+              {children}
             </QueryProvider>
           </AuthProvider>
         </ThemeProvider>
