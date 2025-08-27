@@ -21,7 +21,11 @@ This is a comprehensive Next.js template project designed to be a production-rea
   - Adding new issues or blockers
   - Making significant progress on any phase
 
-### 3. Project Structure Awareness
+### 3. Documentation Structure
+- **`setupGuides/`** - User setup guides (auth, database, PWA, etc.)
+- **`docs/`** - Implementation documentation for developers/AI
+
+### 4. Project Structure Awareness
 Follow the established patterns in:
 - `app/` - Next.js App Router structure
 - `components/` - Reusable UI components
@@ -29,7 +33,7 @@ Follow the established patterns in:
 - `hooks/` - Custom React hooks
 - `types/` - TypeScript definitions
 
-### 4. Development Phases
+### 5. Development Phases
 The project is organized into 9 phases as outlined in PROGRESS.md:
 1. Core Setup
 2. UI Foundation (Tailwind + Shadcn/ui)
@@ -41,19 +45,20 @@ The project is organized into 9 phases as outlined in PROGRESS.md:
 8. Developer Experience
 9. Production Ready
 
-### 5. Code Quality Standards
+### 6. Code Quality Standards
 - Use TypeScript throughout
 - Follow semantic color system with Tailwind CSS
 - Implement dark/light mode support
 - Ensure accessibility compliance
 - Maintain type safety with Zod validation
 
-### 6. When Making Changes
+### 7. When Making Changes
 1. Check current progress in PROGRESS.md
 2. Reference README.md for context and standards
 3. Make the requested changes
 4. Update PROGRESS.md to reflect completed work
 5. Update README.md if adding new features or changing setup
+6. Add user guides to `setupGuides/` and implementation docs to `docs/`
 
 ## Important Notes
 - This template emphasizes developer experience and production readiness

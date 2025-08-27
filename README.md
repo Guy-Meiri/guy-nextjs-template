@@ -108,14 +108,22 @@ After creating a new project from this template:
 - [ ] Set up Vercel deployment
 - [ ] Configure domain and SSL
 
-## 🔐 OAuth Provider Setup
+## 🔐 Setup Guides
 
-Detailed step-by-step guides for configuring authentication providers:
+Step-by-step guides for configuring all template features:
 
-- **[Google OAuth Setup](./googleAuthInstruciton.md)** - Complete guide for Google Cloud Console setup
-- **[GitHub OAuth Setup](./githubAuthInstructions.md)** - Complete guide for GitHub OAuth App setup
+- **[Google OAuth Setup](./setupGuides/googleAuthInstruciton.md)** - Google Cloud Console configuration
+- **[GitHub OAuth Setup](./setupGuides/githubAuthInstructions.md)** - GitHub OAuth App setup
+- **[Supabase Setup](./setupGuides/supabase-setup.md)** - Database and backend configuration
+- **[PWA Setup](./setupGuides/pwa-setup-guide.md)** - Progressive Web App customization
 
-Follow these guides to get your Client IDs and Client Secrets for the environment variables below.
+## 📚 Documentation
+
+Implementation details for developers:
+
+- **[API Client Guide](./docs/api-client-guide.md)** - Type-safe API client usage
+- **[Database Architecture](./docs/database-architecture.md)** - Database schema and patterns
+- **[PWA Implementation](./docs/pwa-implementation.md)** - Progressive Web App technical details
 
 ## 🔗 Type-Safe API Client
 
