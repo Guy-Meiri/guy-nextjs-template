@@ -4,28 +4,35 @@ A fully type-safe API client that eliminates hardcoded paths and provides excell
 
 ## Project Structure
 
-- `src/lib/api-client.types.ts` - Type definitions and endpoint configurations
+- `src/lib/api.types.ts` - API response/request type definitions
+- `src/lib/api-client.types.ts` - Endpoint configurations and client types
 - `src/lib/api-client.ts` - API client implementation
 - `src/hooks/use-data.ts` - React Query hooks
 
 ## How It Works
 
-Define endpoints in the types file:
+Define types and endpoints separately:
 
 ```typescript
+// src/lib/api.types.ts
+export type DashboardStats = {
+  totalUsers: number
+}
+
 // src/lib/api-client.types.ts
+import { DashboardStats } from './api.types'
+
 export const API_ENDPOINTS = {
   stats: {
     dashboard: {
       method: 'GET' as const,
       path: '/api/stats' as const,
-      response: {} as { totalUsers: number }
+      response: {} as DashboardStats
     }
   }
 } as const
 
 export type ApiEndpoints = typeof API_ENDPOINTS
-export type DashboardStats = ApiEndpoints['stats']['dashboard']['response']
 ```
 
 The client imports and uses these types:
@@ -48,26 +55,34 @@ export class ApiClient {
 ### 1. Define Types and Endpoints
 
 ```typescript
+// src/lib/api.types.ts
+export type UserProfile = {
+  id: string
+  name: string
+  email: string
+}
+
 // src/lib/api-client.types.ts
+import { UserProfile } from './api.types'
+
 export const API_ENDPOINTS = {
   // existing endpoints...
   users: {
     profile: {
       method: 'GET' as const,
       path: '/api/users/profile' as const,
-      response: {} as { id: string; name: string; email: string }
+      response: {} as UserProfile
     }
   }
 } as const
-
-export type UserProfile = ApiEndpoints['users']['profile']['response']
 ```
 
 ### 2. Add Client Methods
 
 ```typescript
 // src/lib/api-client.ts
-import { API_ENDPOINTS, UserProfile } from './api-client.types'
+import { API_ENDPOINTS } from './api-client.types'
+import { UserProfile } from './api.types'
 
 export class ApiClient {
   users = {

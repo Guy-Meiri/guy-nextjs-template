@@ -1,7 +1,8 @@
 // Type-safe API client for frontend requests
 // This client handles HTTP requests to our Next.js API routes
 
-import { API_ENDPOINTS, ApiError, DashboardStats } from './api-client.types'
+import { API_ENDPOINTS, ApiError } from './api-client.types'
+import { DashboardStats } from './api.types'
 
 // Type-safe API client class
 export class ApiClient {

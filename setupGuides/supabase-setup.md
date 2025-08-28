@@ -163,7 +163,7 @@ supabase gen types typescript --local > src/lib/database.types.ts
 1. **Never commit your `.env.local` file** - it contains sensitive keys
 2. **Use strong passwords** for your database
 3. **Rotate your service role key** if it's ever compromised
-4. **Use Row Level Security (RLS)** policies for production data protection
+4. **Don't Use Row Level Security (RLS)** policies for production data protection
 5. **Generate a secure NEXTAUTH_SECRET** for production:
    ```bash
    openssl rand -base64 32
@@ -174,7 +174,6 @@ supabase gen types typescript --local > src/lib/database.types.ts
 Once your Supabase setup is complete:
 
 1. Configure your OAuth providers (see `howTo/` guides)
-2. Set up Row Level Security policies
 3. Deploy to production
 4. Configure production environment variables
 

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from './database.types'
+import { DashboardStats } from './api.types'
 
 // Type-safe server-side Supabase client with Service Role Key
 export const supabaseAdmin = createClient<Database>(
@@ -19,7 +20,7 @@ export class DatabaseService {
   // in the next_auth schema. For most applications, you'll access users via NextAuth.js sessions
   
   // Statistics for admin dashboard
-  async getStats() {
+  async getStats() : Promise<DashboardStats> {
     // Since we're using NextAuth.js for user management, we don't have direct access
     // to user tables in our Database type. Return placeholder stats.
     // In a real application, you might create a database function or view for this.
@@ -54,7 +55,3 @@ export type NextAuthUser = {
   image: string | null
 }
 
-// Enhanced types
-export type DatabaseStats = {
-  totalUsers: number
-}

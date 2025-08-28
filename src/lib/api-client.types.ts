@@ -1,15 +1,15 @@
 // Type definitions for the API client
 // This file contains all type definitions and endpoint configurations
 
+import { DashboardStats } from './api.types'
+
 // Define the API endpoints structure with both runtime and type information
 export const API_ENDPOINTS = {
   stats: {
     dashboard: {
       method: 'GET' as const,
       path: '/api/stats' as const,
-      response: {} as {
-        totalUsers: number
-      }
+      response: {} as DashboardStats
     }
   }
   // Add more endpoints here as you create them
@@ -31,5 +31,5 @@ export type ApiError = {
   status?: number
 }
 
-// Specific endpoint response types
-export type DashboardStats = ApiEndpoints['stats']['dashboard']['response']
+
+

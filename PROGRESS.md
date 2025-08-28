@@ -172,6 +172,9 @@ Track the implementation progress of the Next.js Golden Template.
 ## 📝 Notes
 
 ### Recent Changes (August 28, 2025)
+- **Improved API type organization: separated data types into api.types.ts**
+- **Enhanced code structure with better separation of concerns**
+- **Fixed build errors and consolidated duplicate type definitions**
 - **Added cookie detection and warning banner for users with cookies disabled**
 - **Improved app reliability with graceful degradation for cookie-blocked users**
 - **Refactored API client architecture: separated types into api-client.types.ts**
