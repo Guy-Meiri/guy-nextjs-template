@@ -1,6 +1,8 @@
 import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"
 
+// Middleware to protect routes and handle authentication redirects
+// Auto-discovered by Next.js from src/middleware.ts and runs on all matched routes
 export default auth((req) => {
   const { nextUrl } = req
   const isLoggedIn = !!req.auth
