@@ -140,8 +140,8 @@ This template includes a fully type-safe API client that eliminates hardcoded AP
 ### Quick Example
 
 ```typescript
-// Define once in api-client.ts
-const API_ENDPOINTS = {
+// Define once in api-client.types.ts
+export const API_ENDPOINTS = {
   stats: {
     dashboard: {
       method: 'GET' as const,

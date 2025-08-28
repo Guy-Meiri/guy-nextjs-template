@@ -1,36 +1,7 @@
 // Type-safe API client for frontend requests
 // This client handles HTTP requests to our Next.js API routes
 
-
-// Define the API endpoints structure with both runtime and type information
-const API_ENDPOINTS = {
-  stats: {
-    dashboard: {
-      method: 'GET' as const,
-      path: '/api/stats' as const,
-      response: {} as {
-        totalUsers: number
-      }
-    }
-  }
-  // Add more endpoints here as you create them
-  // users: {
-  //   profile: {
-  //     method: 'GET' as const,
-  //     path: '/api/users/profile' as const,
-  //     response: {} as UserProfile
-  //   }
-  // }
-} as const
-
-// Extract the type from the const object
-export type ApiEndpoints = typeof API_ENDPOINTS
-
-// Generic API error type
-export type ApiError = {
-  error: string
-  status?: number
-}
+import { API_ENDPOINTS, ApiError, DashboardStats } from './api-client.types'
 
 // Type-safe API client class
 export class ApiClient {
@@ -70,7 +41,7 @@ export class ApiClient {
   // Stats endpoints
   stats = {
     getDashboard: () => 
-      this.request<ApiEndpoints['stats']['dashboard']['response']>(
+      this.request<DashboardStats>(
         API_ENDPOINTS.stats.dashboard.path
       ),
   }
@@ -86,6 +57,3 @@ export class ApiClient {
 
 // Export singleton instance
 export const apiClient = new ApiClient()
-
-// Export types for use in components
-export type DashboardStats = ApiEndpoints['stats']['dashboard']['response']

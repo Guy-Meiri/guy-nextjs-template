@@ -19,6 +19,3 @@ export function useDashboardStats() {
     refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
   })
 }
-
-// Note: User hooks removed since NextAuth.js handles user management
-// If you need custom user profiles, add a profiles table and corresponding hooks here
