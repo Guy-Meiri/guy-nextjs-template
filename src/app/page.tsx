@@ -16,9 +16,14 @@ export default async function Home() {
           <h1 className="text-2xl font-bold">Next.js Golden Template</h1>
           <div className="flex items-center gap-4">
             {session?.user ? (
-              <Link href="/dashboard">
-                <Button variant="outline">Dashboard</Button>
-              </Link>
+              <>
+                <Link href="/dashboard">
+                  <Button variant="outline">Dashboard</Button>
+                </Link>
+                <Link href="/payments">
+                  <Button variant="outline">Payments</Button>
+                </Link>
+              </>
             ) : (
               <Link href="/auth/signin">
                 <Button variant="outline">Sign In</Button>
