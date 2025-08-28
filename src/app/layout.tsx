@@ -5,6 +5,7 @@ import { validateEnv } from "@/lib/env";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { CookieWarningBanner } from "@/components/ui/cookie-warning-banner";
 
 // Validate environment variables on app startup
 if (typeof window === "undefined") {
@@ -60,6 +61,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             <QueryProvider>
+              <CookieWarningBanner />
               {children}
             </QueryProvider>
           </AuthProvider>

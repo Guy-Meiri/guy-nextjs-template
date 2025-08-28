@@ -172,6 +172,8 @@ Track the implementation progress of the Next.js Golden Template.
 ## 📝 Notes
 
 ### Recent Changes (August 28, 2025)
+- **Added cookie detection and warning banner for users with cookies disabled**
+- **Improved app reliability with graceful degradation for cookie-blocked users**
 - **Refactored API client architecture: separated types into api-client.types.ts**
 - **Improved code organization and maintainability**
 - **Updated documentation to be more concise and reflect new structure**
