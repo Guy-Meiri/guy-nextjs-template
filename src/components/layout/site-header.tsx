@@ -1,41 +1,31 @@
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { UserNav } from "@/components/auth/user-nav";
-import { auth } from "@/lib/auth";
+import { MobileNav } from "@/components/layout/mobile-nav";
+import { DesktopNav } from "@/components/layout/desktop-nav";
 import Link from "next/link";
 
 interface SiteHeaderProps {
-  title?: string;
-  showUserNav?: boolean;
+  pageTitle?: string;
 }
 
-export async function SiteHeader({ 
-  title = "Guy's template", 
-  showUserNav = false 
+export function SiteHeader({ 
+  pageTitle
 }: SiteHeaderProps) {
-  const session = await auth();
+  const appName = "Guy's Template";
   
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">{title}</h1>
-        <div className="flex items-center gap-4">
-          {showUserNav ? (
-            <UserNav />
-          ) : (
-            <>
-              {session?.user ? (
-                <Link href="/dashboard">
-                  <Button variant="outline">Dashboard</Button>
-                </Link>
-              ) : (
-                <Link href="/auth/signin">
-                  <Button variant="outline">Sign In</Button>
-                </Link>
-              )}
-            </>
+        <Link href="/" className="flex items-baseline gap-2 hover:opacity-80 transition-opacity group">
+          <span className="text-2xl font-bold">{appName}</span>
+          {pageTitle && (
+            <span className="text-sm text-muted-foreground font-medium">
+              /{pageTitle}
+            </span>
           )}
-          <ThemeToggle />
+        </Link>
+        
+        <div className="flex items-center gap-2">
+          <DesktopNav />
+          <MobileNav />
         </div>
       </div>
     </header>

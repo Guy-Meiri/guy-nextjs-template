@@ -16,7 +16,7 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <SiteHeader title="Dashboard" showUserNav={true} />
+      <SiteHeader pageTitle="Dashboard" />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
