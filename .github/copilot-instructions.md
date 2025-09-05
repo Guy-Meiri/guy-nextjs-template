@@ -72,6 +72,16 @@ When adding new features with database operations, follow this 8-step pattern:
 7. **Custom Hooks** (`src/hooks/`) - Create React Query hooks for data management
 8. **Components** (`src/components/`) - Build UI with imported types and validation
 
+### 9. Adding New UI Pages
+When adding a new page to the application:
+
+1. **Create Page Component** - Add new page in `src/app/[page-name]/page.tsx` using Next.js App Router
+2. **Add SiteHeader** - Include `<SiteHeader pageTitle="Page Name" />` for consistent navigation
+3. **Update Navigation** - Add the page to `navigationItems` array in both `src/components/layout/mobile-nav.tsx` and `src/components/layout/desktop-nav.tsx`
+4. **Set Visibility** - Configure as `public: true` for all users or `protected: true` for authenticated users only
+5. **Import Icon** - Add appropriate Lucide React icon for the navigation menu
+6. **Test Responsive** - Verify the page works correctly on both mobile hamburger menu and desktop navigation
+
 ## Important Notes
 - This template emphasizes developer experience and production readiness
 - Always consider the overall architecture when making changes
