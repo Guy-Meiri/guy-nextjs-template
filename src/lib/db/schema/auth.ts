@@ -4,6 +4,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  date,
 } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from '@auth/core/adapters'
 
@@ -16,6 +17,21 @@ export const users = pgTable('user', {
   email: text('email').unique(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
+})
+
+// User profiles table - extended user information
+export const userProfiles = pgTable('user_profile', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text('userId')
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  nickname: text('nickname'),
+  dateOfBirth: date('dateOfBirth', { mode: 'date' }),
+  createdAt: timestamp('createdAt', { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp('updatedAt', { mode: 'date' }).defaultNow(),
 })
 
 // Accounts table - OAuth provider accounts
@@ -70,6 +86,8 @@ export const verificationTokens = pgTable(
 // Export types for TypeScript
 export type User = typeof users.$inferSelect
 export type NewUser = typeof users.$inferInsert
+export type UserProfile = typeof userProfiles.$inferSelect
+export type NewUserProfile = typeof userProfiles.$inferInsert
 export type Account = typeof accounts.$inferSelect
 export type NewAccount = typeof accounts.$inferInsert
 export type Session = typeof sessions.$inferSelect

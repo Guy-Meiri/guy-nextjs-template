@@ -73,4 +73,49 @@ export const dbOperations = {
       return []
     }
   },
+
+  // User Profile operations
+  async getUserProfile(userId: string) {
+    try {
+      const [profile] = await db
+        .select()
+        .from(schema.userProfiles)
+        .where(eq(schema.userProfiles.userId, userId))
+        .limit(1)
+      
+      return profile || null
+    } catch (error) {
+      console.error('Database error:', error)
+      return null
+    }
+  },
+
+  async createUserProfile(data: typeof schema.userProfiles.$inferInsert) {
+    try {
+      const [profile] = await db
+        .insert(schema.userProfiles)
+        .values(data)
+        .returning()
+      
+      return profile
+    } catch (error) {
+      console.error('Database error:', error)
+      throw error
+    }
+  },
+
+  async updateUserProfile(userId: string, data: Partial<typeof schema.userProfiles.$inferInsert>) {
+    try {
+      const [profile] = await db
+        .update(schema.userProfiles)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(schema.userProfiles.userId, userId))
+        .returning()
+      
+      return profile
+    } catch (error) {
+      console.error('Database error:', error)
+      throw error
+    }
+  },
 }
