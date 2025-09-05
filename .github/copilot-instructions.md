@@ -65,9 +65,9 @@ When adding new features with database operations, follow this 8-step pattern:
 
 1. **Database Schema** (`src/lib/db/schema/`) - Define tables with Drizzle ORM
 2. **Database Operations** (`src/lib/db/index.ts`) - Add CRUD operations to `dbOperations`
-3. **API Types & Validation** (`src/lib/api.types.ts`) - Define types and Zod schemas  
-4. **API Endpoints** (`src/lib/api-client.types.ts`) - Configure endpoint definitions
-5. **API Client Methods** (`src/lib/api-client.ts`) - Implement type-safe HTTP methods
+3. **API Types & Validation** (`src/lib/api/api.types.ts`) - Define types and Zod schemas  
+4. **API Endpoints** (`src/lib/api/api-client.types.ts`) - Configure endpoint definitions
+5. **API Client Methods** (`src/lib/api/api-client.ts`) - Implement type-safe HTTP methods
 6. **API Routes** (`src/app/api/`) - Create Next.js route handlers with validation
 7. **Custom Hooks** (`src/hooks/`) - Create React Query hooks for data management
 8. **Components** (`src/components/`) - Build UI with imported types and validation

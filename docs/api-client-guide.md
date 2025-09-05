@@ -4,9 +4,9 @@ A fully type-safe API client that eliminates hardcoded paths and provides excell
 
 ## Architecture
 
-- `src/lib/api.types.ts` - API response/request types + form validation schemas
-- `src/lib/api-client.types.ts` - Endpoint configurations and client types
-- `src/lib/api-client.ts` - API client implementation
+- `src/lib/api/api.types.ts` - API response/request types + form validation schemas
+- `src/lib/api/api-client.types.ts` - Endpoint configurations and client types
+- `src/lib/api/api-client.ts` - API client implementation
 - `src/hooks/use-*.ts` - Feature-specific React Query hooks
 
 ## Pattern
@@ -14,13 +14,13 @@ A fully type-safe API client that eliminates hardcoded paths and provides excell
 Define types and endpoints separately for complete type safety:
 
 ```typescript
-// src/lib/api.types.ts
+// src/lib/api/api.types.ts
 export type MyEntity = {
   id: string
   name: string
 }
 
-// src/lib/api-client.types.ts
+// src/lib/api/api-client.types.ts
 export const API_ENDPOINTS = {
   entities: {
     get: {
@@ -31,7 +31,7 @@ export const API_ENDPOINTS = {
   }
 } as const
 
-// src/lib/api-client.ts
+// src/lib/api/api-client.ts
 export class ApiClient {
   entities = {
     get: (id: string): Promise<typeof API_ENDPOINTS.entities.get.response> => 
@@ -42,9 +42,9 @@ export class ApiClient {
 
 ## Implementation Steps
 
-1. **Define types** in `api.types.ts`
-2. **Configure endpoints** in `api-client.types.ts`
-3. **Add client methods** in `api-client.ts`
+1. **Define types** in `api/api.types.ts`
+2. **Configure endpoints** in `api/api-client.types.ts`
+3. **Add client methods** in `api/api-client.ts`
 4. **Create React Query hooks** in `hooks/`
 5. **Use in components**
 

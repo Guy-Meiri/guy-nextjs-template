@@ -1,9 +1,9 @@
 import { count, eq } from 'drizzle-orm'
 import { db, users } from './db/index'
-import { DashboardStats } from './api.types'
+import { DashboardStats } from './api/api.types'
 
 // Database operations using Drizzle ORM
-export class DrizzleService {
+export class DBService {
   // Get dashboard statistics
   async getStats(): Promise<DashboardStats> {
     try {
@@ -52,7 +52,7 @@ export class DrizzleService {
 }
 
 // Export singleton instance
-export const drizzleDb = new DrizzleService()
+export const drizzleDb = new DBService()
 
 // Export types for external use
 export type { User, NewUser } from './db/schema/auth'

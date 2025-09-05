@@ -3,7 +3,7 @@ import { count, eq } from 'drizzle-orm'
 import postgres from 'postgres'
 import { env } from '../env'
 import * as schema from './schema'
-import type { DashboardStats } from '../api.types'
+import type { DashboardStats } from '../api/api.types'
 
 // Create the connection
 const connectionString = env.DATABASE_URL

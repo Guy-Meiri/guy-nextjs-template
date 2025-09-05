@@ -22,7 +22,7 @@ npm run supabase:start   # Start local database
 1. Define schema in `src/lib/db/schema/`
 2. Run `npm run db:push` to apply changes
 3. Add operations to `src/lib/db/index.ts`
-4. Create API types in `src/lib/api.types.ts`
+4. Create API types in `src/lib/api/api.types.ts`
 
 ## File Structure
 ```

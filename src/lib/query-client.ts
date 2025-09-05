@@ -14,8 +14,8 @@ export const queryClient = new QueryClient({
         if (errorWithStatus?.status === 404 || errorWithStatus?.status === 403) {
           return false
         }
-        // Retry up to 3 times for other errors
-        return failureCount < 3
+        // Retry up to 2 times for other errors
+        return failureCount < 2
       },
       // Refetch on window focus
       refetchOnWindowFocus: false,
