@@ -8,10 +8,8 @@ function isPlaceholder(value: string): boolean {
 }
 
 export const env = {
-  // Database
-  SUPABASE_URL: process.env.SUPABASE_URL || '',
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
-  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+  // Database - PostgreSQL via Drizzle
+  DATABASE_URL: process.env.DATABASE_URL || '',
   
   // Authentication
   NEXTAUTH_URL: process.env.NEXTAUTH_URL || 'http://localhost:3000',
@@ -32,10 +30,8 @@ export const env = {
 /**
  * Check if required services are configured
  */
-export function hasSupabaseConfig(): boolean {
-  return !isPlaceholder(env.SUPABASE_URL) && 
-         !isPlaceholder(env.NEXT_PUBLIC_SUPABASE_ANON_KEY) &&
-         !isPlaceholder(env.SUPABASE_SERVICE_ROLE_KEY)
+export function hasDatabaseConfig(): boolean {
+  return !isPlaceholder(env.DATABASE_URL)
 }
 
 export function hasAuthProviders(): boolean {
@@ -50,8 +46,8 @@ export function hasAuthProviders(): boolean {
 export function validateEnv() {
   const warnings: string[] = []
   
-  if (!hasSupabaseConfig()) {
-    warnings.push('Supabase configuration incomplete - database features will not work')
+  if (!hasDatabaseConfig()) {
+    warnings.push('DATABASE_URL is not configured - database features will not work')
   }
   
   if (!hasAuthProviders()) {

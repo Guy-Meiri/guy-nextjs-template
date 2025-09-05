@@ -1,35 +1,12 @@
-import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 
-// Middleware to protect routes and handle authentication redirects
-// Auto-discovered by Next.js from src/middleware.ts and runs on all matched routes
-export default auth((req) => {
-  const { nextUrl } = req
-  const isLoggedIn = !!req.auth
-
-  // Define protected routes
-  const isProtectedRoute = nextUrl.pathname.startsWith("/dashboard") ||
-                          nextUrl.pathname.startsWith("/profile") ||
-                          nextUrl.pathname.startsWith("/settings")
-
-  // Define auth routes
-  const isAuthRoute = nextUrl.pathname.startsWith("/auth/signin") ||
-                     nextUrl.pathname.startsWith("/auth/signup")
-
-  // Redirect to signin if trying to access protected route while not logged in
-  if (isProtectedRoute && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/auth/signin", nextUrl))
-  }
-
-  // Redirect to dashboard if trying to access auth routes while logged in
-  if (isAuthRoute && isLoggedIn) {
-    return NextResponse.redirect(new URL("/dashboard", nextUrl))
-  }
-
+// Temporarily disable auth middleware to test if Edge Runtime is the issue
+export function middleware(_request: NextRequest) {
   return NextResponse.next()
-})
+}
 
-// Configure which routes use this middleware
+// Configure which routes use this middleware  
 export const config = {
   matcher: [
     /*

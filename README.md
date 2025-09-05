@@ -20,12 +20,13 @@ This template eliminates repetitive setup work by providing a pre-configured, pr
 - **Lucide React** - Modern icon library
 
 ### Backend & Database
-- **Supabase** - Backend-as-a-Service (Database, Auth, Storage, Edge Functions)
-- **PostgreSQL** - Robust relational database (via Supabase)
+- **PostgreSQL** - Robust relational database (any provider)
+- **Drizzle ORM** - Type-safe database toolkit with migrations
+- **Supabase** - (Optional) Full-stack platform for local development
 
 ### Authentication
 - **NextAuth.js v5** - Complete authentication solution
-- **Supabase Auth** - Integrated with NextAuth for seamless experience
+- **Drizzle Adapter** - Integrated with Drizzle ORM for type-safe auth
 
 ### Data Management
 - **TanStack Query (React Query)** - Server state management
@@ -46,10 +47,10 @@ This template eliminates repetitive setup work by providing a pre-configured, pr
 - Session management
 
 ### ✅ Database & API
-- Supabase integration with TypeScript types
+- Drizzle ORM integration with full TypeScript support
+- PostgreSQL with any provider (Supabase, Neon, Vercel, etc.)
+- Type-safe database operations and migrations
 - RESTful API routes
-- Real-time subscriptions
-- File upload and storage
 
 ### ✅ UI Components
 - Pre-built Shadcn components
@@ -89,7 +90,10 @@ npm install
 
 # Set up environment variables
 cp .env.example .env.local
-# Edit .env.local with your Supabase and NextAuth configuration
+# Edit .env.local with your database URL and NextAuth configuration
+
+# Run database migrations
+npm run db:migrate
 
 # Run the development server
 npm run dev
@@ -101,8 +105,9 @@ After creating a new project from this template:
 
 - [ ] Update `package.json` with your project details
 - [ ] Configure environment variables in `.env.local`
-- [ ] Set up Supabase project and update connection details
+- [ ] Set up your PostgreSQL database (see Database Setup guide)
 - [ ] Configure NextAuth providers and secrets (see OAuth setup guides below)
+- [ ] Run database migrations: `npm run db:migrate`
 - [ ] Update site metadata in `app/layout.tsx`
 - [ ] Customize the landing page and branding
 - [ ] Set up Vercel deployment
@@ -112,9 +117,9 @@ After creating a new project from this template:
 
 Step-by-step guides for configuring all template features:
 
+- **[Database Setup](./setupGuides/database-setup.md)** - PostgreSQL database configuration with Drizzle ORM
 - **[Google OAuth Setup](./setupGuides/googleAuthInstruciton.md)** - Google Cloud Console configuration
 - **[GitHub OAuth Setup](./setupGuides/githubAuthInstructions.md)** - GitHub OAuth App setup
-- **[Supabase Setup](./setupGuides/supabase-setup.md)** - Database and backend configuration
 - **[PWA Setup](./setupGuides/pwa-setup-guide.md)** - Progressive Web App customization
 
 ## 📚 Documentation

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { db } from '@/lib/db'
+import { dbOperations } from '@/lib/db'
 
 export async function GET() {
   try {
@@ -13,8 +13,8 @@ export async function GET() {
       )
     }
 
-    // Get dashboard statistics directly from database service
-    const stats = await db.getStats()
+    // Get dashboard statistics using Drizzle
+    const stats = await dbOperations.getStats()
 
     return NextResponse.json(stats)
   } catch (error) {

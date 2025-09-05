@@ -44,7 +44,7 @@ export default async function DashboardPage() {
               <CardHeader>
                 <CardTitle>✅ Authentication</CardTitle>
                 <CardDescription>
-                  NextAuth.js v5 with Supabase
+                  NextAuth.js v5 with PostgreSQL + Drizzle ORM
                 </CardDescription>
               </CardHeader>
               <CardContent>

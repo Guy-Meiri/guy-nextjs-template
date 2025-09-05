@@ -1,7 +1,8 @@
 import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
-import { SupabaseAdapter } from "@auth/supabase-adapter"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db } from "./db/index"
 import { env } from "./env"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -22,16 +23,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       })
     ] : []),
   ],
-  adapter: SupabaseAdapter({
-    url: process.env.SUPABASE_URL!,
-    secret: process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  }),
+  adapter: DrizzleAdapter(db),
   callbacks: {
     session({ session, user }) {
       if (user?.id) {
         session.user.id = user.id
       }
       return session
+    },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return `${baseUrl}/dashboard`
     },
   },
   pages: {
